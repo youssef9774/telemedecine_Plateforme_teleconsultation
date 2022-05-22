@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+       <title>Chat-Bot ITS2</title>
+
+       <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    </head>
+    <body>
+      <center>
+      <label font style="font-size:xx-large; font-style:oblique;">Chat room ITS 2</label> <br>
+      <label font style="font-size:xx-large; font-style:oblique;">V1 Youssef SASSI</label>
+    </center>
+    
+    <br>
+    <br>
+      <form>
+        <div class="panel-footer">
+          <center>
+          <div class="input-group">
+            
+          <label for="name">Nom utilisateur: </label>
+          <input id="username" type="text" name="name" id="name" required class="form-control input-sm chat_input" placeholder="Your name">
+          </center>
+          <br>
+
+          <br>
+        
+          
+            
+            </div>
+          <div class="panel-footer">
+            <div class="input-group">
+                <input name="msg" id="msg" id="btn-input" type="text" class="form-control input-sm chat_input" placeholder="Write your msg here..." />
+                <span class="input-group-btn">
+                <button class="btn btn-primary btn-sm" id="btn-chat"><i class="fa fa-send fa-1x" aria-hidden="true"></i></button>
+                </span>
+            </div>
+        </div>
+        
+      </div>
+      </form>
+      
+      <div id="affiche" font style="color: blue;" > 
+      </div>
+      
+    </body>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+      $(function (){
+        var socket = io();
+
+ /*La méthode PreventionDefault(), attachée à l'interface event, 
+ indique à l'utilisateur que si l'event n'est pas géré correctement,
+  l'action par défaut ne doit pas être exécutée comme elle est.*/
+
+        $("form").submit(function (event){
+          event.preventDefault();
+          var utilisateur = document.getElementById("username").value;
+/*on peut ajouter un callback comme dernier argument de la fonction emit(), 
+et ce callback sera appelé une fois que l'autre partie aura accusé réception de l'événement 
+comme ici on va envoyer le message ecrit et le contenue sur la casse de de nom d'utilisateur et par la suite 
+on va passer pour laffichage apres le mettre dans un variable*/
+          socket.emit("chat message", utilisateur + " ==> " + $("#msg").val());
+          $("#msg").val("");
+          return false;
+        });
+
+        /*La méthode getElementById() du document renvoie un objet élément représentant l'élément
+         dont la propriété d'identifiant correspond à la chaîne. Étant donné que les identifiants
+          d'élément doivent être uniques.
+        s'ils sont spécifiés, cela en fait un moyen utile d'accéder rapidement à un élément spécifique. 
+        on va prendre la valeur de username qui est deja ecrit dans la case ( c'est pareil de la methode get en python )*/
+        socket.on('chat message', function(msg) {
+          var utilisateur = document.getElementById("username").value;
+          /*  affichage dans la partie allouer ou la partition par la div ( avec l'id affiche ) dans le but de 
+          afficher le chat */
+          $("#affiche").append($("<h2>").text(msg));
+        });
+      });
+
+    </script>
+    
+</html>
